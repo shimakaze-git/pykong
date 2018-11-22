@@ -1,0 +1,6 @@
+test:
+  upstream_url: "http://example.com/"
+  uris: "http://127.0.0.1:3000/test"
+hoge:
+  upstream_url: "http://example.com/"
+  uris: "http://127.0.0.1:3000/hoge"
