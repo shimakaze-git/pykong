@@ -21,8 +21,19 @@ def error(message):
 
 def is_file(path):
     """ is file """
-
     return os.path.isfile(path)
+
+
+def pretty_json(obj):
+    return json.dumps(obj, sort_keys=True, indent=2 * ' ')
+
+
+def handle_json_response(response):
+    if response.ok:
+        return response.json()
+    else:
+        print(response.text)
+
 
 def convertToDict(path):
     """ File convert to dict """
@@ -89,12 +100,20 @@ def isJsonFormat(path):
 
 
 class RequestHelper(object):
-    
+    """ Request Helper Class """
+
     def __init__(self, request_url):
         self.request_url = request_url
         self.form_header = {
             'Content-type': 'application/x-www-form-urlencoded'
         }
+
+    def get(self, params):
+        res = requests.get(
+            self.request_url,
+            params
+        )
+        return res
 
     def post(self, data):
         if self.check_data(data):

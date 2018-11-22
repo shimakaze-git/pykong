@@ -30,12 +30,21 @@ from .helper import is_file
 #     # ctx.obj = Kong(conf, debug)
 #     print(ctx, conf, debug)
 
+def validate_port(ctx, param, port):
+    """ validation check port"""
+
+    if port > 65535:
+        raise click.BadParameter('The Numeric of port is out of range.')
+
+
 @click.group(help="pykong config")
-@click.option('--host', '-h', default='127.0.0.1:8001', help='kong hosturl and port.')
+@click.option('--host', '-h', default='127.0.0.1', help='kong hosturl.')
+@click.option('--port', '-p', type=int, callback=validate_port, default='8001', help='kong port.')
 # @click.argument('name')
 @click.pass_context
 def cli(ctx, host):
-    ctx.obj = PyKongCore(host=host)
+    # ctx.obj = PyKongCore(host=host)
+    pass
 
 
 @cli.command()
@@ -53,18 +62,17 @@ def japanese(pykong):
     # click.echo('Konnichiwa, Sekai!, {test} !'.format(test=test))
 
 
-
 def validate_isfile(file):
     """ validation check """
 
     if not is_file(file):
         raise click.BadParameter('List File Does Not Exist.')
 
-@cli.command()
+
+@cli.command("add")
 @click.option('--file', '-f', type=str, help='test.')
 @click.pass_obj
 def add(pykong, file):
-    
     validate_isfile(file)
     api_list = convertToDict(file)
     print(api_list)
