@@ -37,7 +37,12 @@ class PyKongCore(object):
         if host:
             self.host = host
         else:
-            self.host = "http://127.0.0.1:8001"
+            self.host = "http://127.0.0.1"
+        if port:
+            self.port = port
+        else:
+            self.port = 8001
+
         self.form_header = {
             'Content-type': 'application/x-www-form-urlencoded'
         }
@@ -57,15 +62,23 @@ class PyKongCore(object):
             res = req_helper.get(
                 params=params
             )
-            if res.ok:
-                return res
-            else:
-                error(
-                    "GET %s Error %s: %s" %
-                    (req_url, res.status_code, res.text)
-                    # "POST %s with data: %s, Error %s: %s" % \
-                    # (url, pretty_json(data), res.status_code, r.text)
-                )
+            return res
+        except Exception as e:
+            print(e)
+            error(e)
+
+    def post(self, req_url, data=None):
+        try:
+            req_helper = RequestHelper(req_url)
+            res = RequestHelper.post(
+                api_url,
+                data=data
+            )
+            return res
+            # error(
+            #     "POST %s Error %s: %s" %
+            #     (api_url, res.status_code, res.text)
+            # )
         except Exception as e:
             print(e)
             error(e)
@@ -79,36 +92,25 @@ class PyKongAPI(PyKongCore):
         super(PyKongAPI, self).__init__(host, port)
 
     def get_api_url(self, path):
-        return "%s%s" % (self.host, path)
+        return "%s:%s%s" % (self.host, self.port, path)
 
     def create(self, data=''):
         """ create api """
-
-        try:
-            api_url = self.get_api_url("/apis/")
-            res = RequestHelper.post(
-                api_url,
-                data=data
-            )
-
-            if res.ok:
-                return res
-            else:
-                error(
-                    "POST %s Error %s: %s" %
-                    (api_url, res.status_code, res.text)
-                    # "POST %s with data: %s, Error %s: %s" % \
-                    # (url, pretty_json(data), res.status_code, r.text)
-                )
-        except Exception as e:
-            print(e)
-            error(e)
+        url = self.get_api_url('/apis/')
+        response = self.post(url, data)
+        return response
 
     def get_list(self):
         """ get api list """
         url = self.get_api_url('/apis/')
         response = self.get(url)
-        return handle_json_response(response)
+        return response
+
+    def get_api(self, name):
+        """ get api """
+        url = self.get_api_url('/apis/%s' % name)
+        response = self.get(url)
+        return response
 
     def add_list(self, api_list: dict):
 

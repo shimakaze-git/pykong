@@ -9,74 +9,40 @@ command line interface of pykong
 
 import click
 from .core import PyKongCore
-from .helper import convertToDict
-from .helper import is_file
+from .core import PyKongAPI
+
+from .helper import handle_json_response
+from .helper import pretty_json
+from .helper import error
 
 
-# @click.group()
-# # @click.option('--conf', envvar='KONG_CONF', default=os.path.expanduser("~/.kong"))
-# # @click.option('--debug/--no-debug', envvar='KONG_DEBUG', default=False)
-# # @click.pass_context
-# def cli(ctx, conf, debug):
-#     # ctx.obj = Kong(conf, debug)
-#     print(ctx, conf, debug)
+class PyKongCLI(object):
+    """ PyKong CLI class"""
 
+    def __init__(self, host, port):
+        self.pykong_api = PyKongAPI(host, port)
+        self.pykong_plugin = None
 
-# @click.group()
-# # @click.option('--conf', envvar='KONG_CONF', default=os.path.expanduser("~/.kong"))
-# # @click.option('--debug/--no-debug', envvar='KONG_DEBUG', default=False)
-# # @click.pass_context
-# def cli(ctx, conf, debug):
-#     # ctx.obj = Kong(conf, debug)
-#     print(ctx, conf, debug)
+    def get_api_list(self):
+        """ get api list """
+        res = self.pykong_api.get_list()
+        if res.ok:
+            res_json = handle_json_response(res)
+            return pretty_json(res_json)
+        else:
+            error(
+                "GET %s Error %s: %s" %
+                (res.url, res.status_code, res.text)
+            )
 
-def validate_port(ctx, param, port):
-    """ validation check port"""
-
-    if port > 65535:
-        raise click.BadParameter('The Numeric of port is out of range.')
-
-
-@click.group(help="pykong config")
-@click.option('--host', '-h', default='127.0.0.1', help='kong hosturl.')
-@click.option('--port', '-p', type=int, callback=validate_port, default='8001', help='kong port.')
-# @click.argument('name')
-@click.pass_context
-def cli(ctx, host):
-    # ctx.obj = PyKongCore(host=host)
-    pass
-
-
-@cli.command()
-@click.pass_obj
-def english(pykong):
-    print(pykong)
-    click.echo('Hello, World!')
-
-
-@cli.command()
-@click.option('--test', '-t', type=str, default='test', help='test.')
-@click.pass_obj
-def japanese(pykong):
-    pass
-    # click.echo('Konnichiwa, Sekai!, {test} !'.format(test=test))
-
-
-def validate_isfile(file):
-    """ validation check """
-
-    if not is_file(file):
-        raise click.BadParameter('List File Does Not Exist.')
-
-
-@cli.command("add")
-@click.option('--file', '-f', type=str, help='test.')
-@click.pass_obj
-def add(pykong, file):
-    validate_isfile(file)
-    api_list = convertToDict(file)
-    print(api_list)
-    # print(pykong)
-    # print(vars())
-
-# https://blog.amedama.jp/entry/2015/10/14/232045
+    def get_api(self, name):
+        """ get api """
+        res = self.pykong_api.get_api(name)
+        if res.ok:
+            res_json = handle_json_response(res)
+            return pretty_json(res_json)
+        else:
+            error(
+                "GET %s Error %s: %s" %
+                (res.url, res.status_code, res.text)
+            )

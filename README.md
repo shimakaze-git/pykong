@@ -1,6 +1,5 @@
 
 Pykong is a client library of kong.
-
 It's also a command line tool of kong.
 ===========
 

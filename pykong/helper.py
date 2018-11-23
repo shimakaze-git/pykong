@@ -29,10 +29,11 @@ def pretty_json(obj):
 
 
 def handle_json_response(response):
-    if response.ok:
-        return response.json()
-    else:
-        print(response.text)
+    return response.json()
+    # if response.ok:
+    #     return response.json()
+    # else:
+    #     print(response.text)
 
 
 def convertToDict(path):
