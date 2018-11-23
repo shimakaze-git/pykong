@@ -21,7 +21,7 @@ import logging
 from .helper import convertToDict
 from .helper import error
 from .helper import RequestHelper
-from .helper import handle_json_response
+# from .helper import handle_json_response
 
 
 def validate(data):
@@ -42,6 +42,7 @@ class PyKongCore(object):
             self.port = port
         else:
             self.port = 8001
+        self.admin_url = self.host + ":" + str(self.port)
 
         self.form_header = {
             'Content-type': 'application/x-www-form-urlencoded'
@@ -52,9 +53,9 @@ class PyKongCore(object):
 
     def status(self):
         """ get request status """
-        url = self.host + "/status/"
+        url = self.admin_url + "/status/"
         response = self.get(url)
-        return handle_json_response(response)
+        return response
 
     def get(self, req_url, params=None):
         try:
