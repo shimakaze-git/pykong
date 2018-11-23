@@ -1,3 +1,6 @@
 .c9
 ex50
 __pycache__
+dist
+build
+pykong.egg-info
