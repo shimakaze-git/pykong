@@ -23,6 +23,18 @@ class PyKongCLI(object):
         self.pykong_api = PyKongAPI(host, port)
         self.pykong_plugin = None
 
+    def get_status(self):
+        """ get api list """
+        res = self.pykong_api.status()
+        if res.ok:
+            res_json = handle_json_response(res)
+            return pretty_json(res_json)
+        else:
+            error(
+                "GET %s Error %s: %s" %
+                (res.url, res.status_code, res.text)
+            )
+
     def get_api_list(self):
         """ get api list """
         res = self.pykong_api.get_list()

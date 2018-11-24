@@ -57,6 +57,13 @@ def add(pykong, file):
     # print(vars())
 
 
+# @cli.group()
+@cli.command("status")
+@click.pass_obj
+def status(pykong):
+    click.echo(pykong.get_status())
+
+
 @cli.group()
 @click.pass_obj
 def api(pykong):
