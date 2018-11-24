@@ -38,7 +38,14 @@ def validate_isfile(file):
 
 @click.group(help="pykong config")
 @click.option('--host', '-h', default='http://127.0.0.1', help='kong hosturl.')
-@click.option('--port', '-p', type=int, callback=validate_port, default='8001', help='kong port.')
+@click.option(
+    '--port',
+    '-p',
+    type=int,
+    callback=validate_port,
+    default='8001',
+    help='kong port.'
+)
 # @click.argument('name')
 @click.pass_context
 def cli(ctx, host, port):
@@ -57,6 +64,13 @@ def add(pykong, file):
     # print(vars())
 
 
+# @cli.group()
+@cli.command("status")
+@click.pass_obj
+def status(pykong):
+    click.echo(pykong.get_status())
+
+
 @cli.group()
 @click.pass_obj
 def api(pykong):
@@ -64,8 +78,77 @@ def api(pykong):
 
 
 @api.command("list")
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
 @click.pass_obj
-def api_list(pykong):
-    click.echo(pykong.get_api_list())
+def api_list(pykong, serialize):
+    click.echo(pykong.get_api_list(
+        serialize=serialize
+    ))
+
+
+@api.command("get")
+@click.option(
+    '--name', '-n', prompt='name',
+    type=str, help='api name'
+)
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
+@click.pass_obj
+def api_get(pykong, name, serialize):
+    click.echo(pykong.get_api(
+        name=name,
+        serialize=serialize
+    ))
+    # params = cleanup_params(vars())
+    # r = kong.get("/apis/%s" % name)
+    # return handle_json_response(r)
+
+
+@api.command("add")
+@click.option(
+    '--name', '-n', prompt='name',
+    type=str, help='api name'
+)
+@click.option(
+    '--upstream-url', '-u', prompt='upstream url',
+    type=str, help="The base target URL that points to your API server."
+)
+@click.option(
+    '--uris', prompt="uris",
+    type=str, help="list of URIs prefixes that point to your API."
+)
+# @click.option('--hosts', prompt='hosts', default="example.com", help="A comma-separated list of domain names that point to your API")
+# @click.option('--uris', prompt='uris', default="", help="A comma-separated list of URIs prefixes that point to your API.")
+# @click.option('--methods', prompt='methods', default="GET,PUT,POST,DELETE", help="A comma-separated list of HTTP methods that point to your API.")
+# @click.option('--upstream-url', prompt='upstream url', default="https://example.com", help="The base target URL that points to your API server. ")
+# @click.option('--strip-uri', help="When matching an API via one of the uris prefixes, strip that matching prefix from the upstream URI to be requested. ")
+# @click.option('--preserve-host', help="When matching an API via one of the hosts domain names, make sure the request Host header is forwarded to the upstream service.")
+# @click.option('--retries', help="The number of retries to execute upon failure to proxy. ")
+# @click.option('--upstream-connect-timeout', help="The timeout in milliseconds for establishing a connection to your upstream service. ")
+# @click.option('--upstream-send-timeout', help="The timeout in milliseconds between two successive write operations for transmitting a request to your upstream service")
+# @click.option('--upstream-read-timeout', help="The timeout in milliseconds between two successive read operations for transmitting a request to your upstream service")
+@click.option('--https-only', help="")
+# @click.option('--http-if-terminated', help="Consider the X-Forwarded-Proto header when enforcing HTTPS only traffic")
+@click.pass_obj
+def api_add(pykong, name, upstream_url, uris, https_only):
+    click.echo(
+        pykong.post_api(vars())
+    )
+
+# curl -i -X POST \
+#   --url http://127.0.0.1:8001/apis/ \
+#   --data 'name=mockbin' \
+#   --data 'upstream_url=http://mockbin.com/' \
+#   --data 'uris=/mockbin'
+
 
 # https://blog.amedama.jp/entry/2015/10/14/232045
