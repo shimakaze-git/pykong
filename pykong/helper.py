@@ -14,6 +14,48 @@ import sys
 import os
 import requests
 
+from prettytable import PrettyTable
+from requests.exceptions import RequestException
+
+
+def apis_serializer(data):
+    """ apis apis_serializer """
+
+    table = PrettyTable(
+        ["key", "value"]
+    )
+    # table.add_row(["created_at", data['created_at']])
+    # table.add_row(["http_if_terminated", data['https_only']])
+    table.add_row(["id", data['id']])
+    table.add_row(["name", data['name']])
+    table.add_row(["preserve_host", data['preserve_host']])
+    table.add_row(["retries", data['retries']])
+    table.add_row(["strip_uri", data['strip_uri']])
+    # table.add_row([
+    #     "upstream_connect_timeout",
+    #     data['upstream_connect_timeout']
+    # ])
+    # table.add_row([
+    #     "upstream_read_timeout",
+    #     data['upstream_read_timeout']
+    # ])
+    # table.add_row([
+    #     "upstream_send_timeout",
+    #     data['upstream_send_timeout']
+    # ])
+    table.add_row(["upstream_url", data['upstream_url']])
+    table.add_row(["uris", data['uris']])
+    return table.get_string() + "\n"
+
+
+def clean_format_params(data, empty_string=False):
+    for k in list(data):
+        value = data[k]
+        if not isinstance(value, (str, int)) or (empty_string and value is ''):
+            data.pop(k)
+    data.pop('pykong', None)
+    return data
+
 
 def error(message):
     raise RuntimeError(message)

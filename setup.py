@@ -28,7 +28,8 @@ setup(
         'click',
         'requests',
         'simplejson',
-        'PyYAML'
+        'PyYAML',
+        'prettytable'
     ],
     dependency_links=[]
 )
