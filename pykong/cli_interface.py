@@ -86,7 +86,7 @@ def api(pykong):
 )
 @click.pass_obj
 def api_list(pykong, serialize):
-    click.echo(pykong.get_api_list(
+    click.echo(pykong.read_api_list(
         serialize=serialize
     ))
 
@@ -104,7 +104,8 @@ def api_list(pykong, serialize):
 )
 @click.pass_obj
 def api_get(pykong, name, serialize):
-    click.echo(pykong.get_api(
+    # click.echo(pykong.get_api(
+    click.echo(pykong.read_api(
         name=name,
         serialize=serialize
     ))
@@ -141,7 +142,7 @@ def api_get(pykong, name, serialize):
 @click.pass_obj
 def api_add(pykong, name, upstream_url, uris, https_only):
     click.echo(
-        pykong.post_api(vars())
+        pykong.create_api(vars())
     )
 
 # curl -i -X POST \

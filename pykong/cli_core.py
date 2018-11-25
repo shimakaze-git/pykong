@@ -40,7 +40,7 @@ class PyKongCLI(object):
                 (res.url, res.status_code, res.text)
             )
 
-    def get_api_list(self, serialize=None):
+    def read_api_list(self, serialize=None):
         """ get api list """
         res = self.pykong_api.get_list()
         if res.ok:
@@ -66,7 +66,7 @@ class PyKongCLI(object):
                 (res.url, res.status_code, res.text)
             )
 
-    def get_api(self, name, serialize=None):
+    def read_api(self, name, serialize=None):
         """ get api """
         res = self.pykong_api.get_api(name)
         if res.ok:
@@ -81,7 +81,7 @@ class PyKongCLI(object):
                 (res.url, res.status_code, res.text)
             )
 
-    def post_api(self, params):
+    def create_api(self, params, serialize=None):
         """ post api """
         params_data = clean_format_params(
             params,
@@ -97,6 +97,16 @@ class PyKongCLI(object):
                 (res.url, res.status_code, res.text)                
             )
 
+    def update_api(self, params, serialize=None):
+        """ update api """
+        params_data = clean_format_params(
+            params,
+            empty_string=False
+        )
+
+    def delete_api(self, name, serialize=None):
+        """ delete api """
+        pass
 
 # curl -i -X POST \
 #   --url http://127.0.0.1:8001/apis/ \

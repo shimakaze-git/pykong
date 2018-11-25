@@ -44,7 +44,13 @@ def apis_serializer(data):
     #     data['upstream_send_timeout']
     # ])
     table.add_row(["upstream_url", data['upstream_url']])
-    table.add_row(["uris", data['uris']])
+
+    # uris, hosts
+    if 'uris' in data:
+        table.add_row(["uris", data['uris']])
+    if 'hosts' in data:
+        table.add_row(["hosts", data['hosts']])
+
     return table.get_string() + "\n"
 
 
