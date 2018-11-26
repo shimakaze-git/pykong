@@ -176,6 +176,36 @@ class RequestHelper(object):
             print("data is empty")
             sys.exit()
 
+    def put(self, data):
+        if self.check_data(data):
+            res = requests.put(
+                self.request_url,
+                data=data,
+                headers=self.form_header
+            )
+            return res
+        else:
+            print("data is empty")
+            sys.exit()
+
+    def patch(self, data):
+        if self.check_data(data):
+            res = requests.patch(
+                self.request_url,
+                data=data,
+                headers=self.form_header
+            )
+            return res
+        else:
+            print("data is empty")
+            sys.exit()
+
+    def delete(self):
+        res = requests.post(
+            self.request_url,
+        )
+        return res
+
     def check_data(self, data):
         if data:
             return True

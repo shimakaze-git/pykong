@@ -68,7 +68,7 @@ class PyKongCLI(object):
 
     def read_api(self, name, serialize=None):
         """ get api """
-        res = self.pykong_api.get_api(name)
+        res = self.pykong_api.read(name)
         if res.ok:
             res_json = handle_json_response(res)
             if serialize is None:
@@ -106,16 +106,31 @@ class PyKongCLI(object):
             params,
             empty_string=False
         )
-        # res = self.pykong_api
-        # if res.ok:
-        #     res_json = handle_json_response(res)
+        res = self.pykong_api.update(params_data)
+        if res.ok:
+            res_json = handle_json_response(res)
+            if serialize is None:
+                return apis_serializer(res_json)
+            else:
+                return pretty_json(res_json)
+        else:
+            error(
+                "PUT %s Error %s: %s" %
+                (res.url, res.status_code, res.text)                
+            )
 
     def delete_api(self, name, serialize=None):
         """ delete api """
-        pass
-
-# curl -i -X POST \
-#   --url http://127.0.0.1:8001/apis/ \
-#   --data 'name=mockbin' \
-#   --data 'upstream_url=http://mockbin.com/' \
-#   --data 'uris=/mockbin'
+        res = self.pykong_api.delete(name)
+        if res.ok:
+            return res
+            # res_json = handle_json_response(res)
+            # if serialize is None:
+            #     return apis_serializer(res_json)
+            # else:
+            #     return pretty_json(res_json)
+        else:
+            error(
+                "DELETE %s Error %s: %s" %
+                (res.url, res.status_code, res.text)                
+            )
