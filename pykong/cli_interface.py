@@ -139,10 +139,26 @@ def api_get(pykong, name, serialize):
 # @click.option('--upstream-read-timeout', help="The timeout in milliseconds between two successive read operations for transmitting a request to your upstream service")
 @click.option('--https-only', help="")
 # @click.option('--http-if-terminated', help="Consider the X-Forwarded-Proto header when enforcing HTTPS only traffic")
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
 @click.pass_obj
-def api_add(pykong, name, upstream_url, uris, https_only):
+def api_add(
+    pykong,
+    name,
+    upstream_url,
+    uris,
+    https_only,
+    serialize
+):
     click.echo(
-        pykong.create_api(vars())
+        pykong.create_api(
+            params=vars(),
+            serialize=serialize
+        )
     )
 
 # curl -i -X POST \

@@ -90,19 +90,25 @@ class PyKongCLI(object):
         res = self.pykong_api.create(params_data)
         if res.ok:
             res_json = handle_json_response(res)
-            return pretty_json(res_json)
+            if serialize is None:
+                return apis_serializer(res_json)
+            else:
+                return pretty_json(res_json)
         else:
             error(
                 "POST %s Error %s: %s" %
                 (res.url, res.status_code, res.text)                
             )
 
-    def update_api(self, params, serialize=None):
+    def update_api(self, name, params, serialize=None):
         """ update api """
         params_data = clean_format_params(
             params,
             empty_string=False
         )
+        # res = self.pykong_api
+        # if res.ok:
+        #     res_json = handle_json_response(res)
 
     def delete_api(self, name, serialize=None):
         """ delete api """

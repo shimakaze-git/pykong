@@ -187,3 +187,14 @@ class PyKongAPI(PyKongCore):
             res = self.create()
             # r = requests.post(url, json=json)
             # print(api_url)
+
+    def update(self, name, data=''):
+        """ update api """
+        url = self.get_api_url('/apis/')
+        # response = self.post(url, data)
+        # return response
+
+        # url = self.get_api_url('/apis/')
+        # response = self.post(url, data)
+        # return response
+        # pass
