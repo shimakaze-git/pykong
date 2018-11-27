@@ -142,6 +142,40 @@ class PyKongCore(object):
             print(e)
             error(e)
 
+    @echo_req
+    def put(self, req_url, data=None):
+        try:
+            req_helper = RequestHelper(req_url)
+            res = req_helper.put(
+                data=data
+            )
+            return res
+        except Exception as e:
+            print(e)
+            error(e)
+
+    @echo_req
+    def patch(self, req_url, data=None):
+        try:
+            req_helper = RequestHelper(req_url)
+            res = req_helper.patch(
+                data=data
+            )
+            return res
+        except Exception as e:
+            print(e)
+            error(e)
+
+    @echo_req
+    def delete(self, req_url):
+        try:
+            req_helper = RequestHelper(req_url)
+            res = req_helper.delete()
+            return res
+        except Exception as e:
+            print(e)
+            error(e)
+
 
 class PyKongAPI(PyKongCore):
     """ PyKongAPI class"""
@@ -159,15 +193,27 @@ class PyKongAPI(PyKongCore):
         response = self.post(url, data)
         return response
 
-    def get_list(self):
-        """ get api list """
-        url = self.get_api_url('/apis/')
+    def read(self, name):
+        """ get api """
+        url = self.get_api_url('/apis/%s' % name)
         response = self.get(url)
         return response
 
-    def get_api(self, name):
-        """ get api """
-        url = self.get_api_url('/apis/%s' % name)
+    def update(self, name, data=''):
+        """ update api """
+        url = self.get_api_url("/apis/%s" % (name))
+        response = self.patch(url, data)
+        return response
+
+    def delete(self, name):
+        """ update api """
+        url = self.get_api_url("/apis/%s" % (name))
+        response = self.delete(url)
+        return response
+
+    def get_list(self):
+        """ get api list """
+        url = self.get_api_url('/apis/')
         response = self.get(url)
         return response
 

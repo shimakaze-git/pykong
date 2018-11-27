@@ -86,7 +86,7 @@ def api(pykong):
 )
 @click.pass_obj
 def api_list(pykong, serialize):
-    click.echo(pykong.get_api_list(
+    click.echo(pykong.read_api_list(
         serialize=serialize
     ))
 
@@ -104,13 +104,10 @@ def api_list(pykong, serialize):
 )
 @click.pass_obj
 def api_get(pykong, name, serialize):
-    click.echo(pykong.get_api(
+    click.echo(pykong.read_api(
         name=name,
         serialize=serialize
     ))
-    # params = cleanup_params(vars())
-    # r = kong.get("/apis/%s" % name)
-    # return handle_json_response(r)
 
 
 @api.command("add")
@@ -138,17 +135,90 @@ def api_get(pykong, name, serialize):
 # @click.option('--upstream-read-timeout', help="The timeout in milliseconds between two successive read operations for transmitting a request to your upstream service")
 @click.option('--https-only', help="")
 # @click.option('--http-if-terminated', help="Consider the X-Forwarded-Proto header when enforcing HTTPS only traffic")
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
 @click.pass_obj
-def api_add(pykong, name, upstream_url, uris, https_only):
+def api_add(
+    pykong,
+    name,
+    upstream_url,
+    uris,
+    https_only,
+    serialize
+):
     click.echo(
-        pykong.post_api(vars())
+        pykong.create_api(
+            params=vars(),
+            serialize=serialize
+        )
     )
 
-# curl -i -X POST \
-#   --url http://127.0.0.1:8001/apis/ \
-#   --data 'name=mockbin' \
-#   --data 'upstream_url=http://mockbin.com/' \
-#   --data 'uris=/mockbin'
+
+@api.command("update")
+@click.option(
+    '--name', '-n', prompt='name',
+    type=str, help='api name'
+)
+@click.option(
+    '--upstream-url', '-u', prompt='upstream url',
+    type=str, help="The base target URL that points to your API server."
+)
+@click.option(
+    '--uris', prompt="uris",
+    type=str, help="list of URIs prefixes that point to your API."
+)
+@click.option('--https-only', help="")
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
+@click.pass_obj
+def api_update(
+    pykong,
+    name,
+    upstream_url,
+    uris,
+    https_only,
+    serialize
+):
+    params = vars()
+    params.pop("name")
+
+    click.echo(
+        pykong.update_api(
+            name=name,
+            params=params,
+            serialize=serialize
+        )
+    )
 
 
-# https://blog.amedama.jp/entry/2015/10/14/232045
+@api.command("delete")
+@click.option(
+    '--name', '-n', prompt='name',
+    type=str, help='api name'
+)
+@click.option(
+    '--serialize',
+    '-s',
+    help="serialize response format",
+    type=click.Choice(['default', 'json'])
+)
+@click.pass_obj
+def api_delete(
+    pykong,
+    name,
+    serialize
+):
+    click.echo(
+        pykong.delete_api(
+            name=name,
+            serialize=serialize
+        )
+    )
