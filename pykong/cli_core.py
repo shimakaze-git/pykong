@@ -21,7 +21,7 @@ from .helper import apis_serializer
 
 
 class PyKongCLI(object):
-    """ PyKong CLI class"""
+    """ PyKong API CLI class"""
 
     def __init__(self, host, port):
         """ Constructor """
@@ -97,7 +97,7 @@ class PyKongCLI(object):
         else:
             error(
                 "POST %s Error %s: %s" %
-                (res.url, res.status_code, res.text)                
+                (res.url, res.status_code, res.text)
             )
 
     def update_api(self, name, params, serialize=None):
@@ -116,7 +116,7 @@ class PyKongCLI(object):
         else:
             error(
                 "PUT %s Error %s: %s" %
-                (res.url, res.status_code, res.text)                
+                (res.url, res.status_code, res.text)
             )
 
     def delete_api(self, name, serialize=None):

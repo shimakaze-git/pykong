@@ -95,7 +95,7 @@ def convertToDict(path):
             file = open(path, "r")
             data_dict = yaml.load(file)
         else:
-            raise
+            raise Exception
         return data_dict
     except Exception as e:
         print('convertToDict')

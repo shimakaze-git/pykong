@@ -112,14 +112,17 @@ class PyKongCore(object):
             'Content-type': 'application/x-www-form-urlencoded'
         }
 
+    def get_api_url(self, path):
+        return "%s:%s%s" % (self.host, self.port, path)
+
     def status(self):
         """ get request status """
         url = self.admin_url + "/status/"
-        response = self.get(url)
+        response = self.get_request(url)
         return response
 
     @echo_req
-    def get(self, req_url, params=None):
+    def get_request(self, req_url, params=None):
         try:
             req_helper = RequestHelper(req_url)
             res = req_helper.get(
@@ -131,7 +134,7 @@ class PyKongCore(object):
             error(e)
 
     @echo_req
-    def post(self, req_url, data=None):
+    def post_request(self, req_url, data=None):
         try:
             req_helper = RequestHelper(req_url)
             res = req_helper.post(
@@ -143,7 +146,7 @@ class PyKongCore(object):
             error(e)
 
     @echo_req
-    def put(self, req_url, data=None):
+    def put_request(self, req_url, data=None):
         try:
             req_helper = RequestHelper(req_url)
             res = req_helper.put(
@@ -155,7 +158,7 @@ class PyKongCore(object):
             error(e)
 
     @echo_req
-    def patch(self, req_url, data=None):
+    def patch_request(self, req_url, data=None):
         try:
             req_helper = RequestHelper(req_url)
             res = req_helper.patch(
@@ -167,7 +170,7 @@ class PyKongCore(object):
             error(e)
 
     @echo_req
-    def delete(self, req_url):
+    def delete_request(self, req_url):
         try:
             req_helper = RequestHelper(req_url)
             res = req_helper.delete()
@@ -184,37 +187,34 @@ class PyKongAPI(PyKongCore):
         """ Constructor """
         super(PyKongAPI, self).__init__(host, port)
 
-    def get_api_url(self, path):
-        return "%s:%s%s" % (self.host, self.port, path)
-
     def create(self, data=''):
         """ create api """
         url = self.get_api_url('/apis/')
-        response = self.post(url, data)
+        response = self.post_request(url, data)
         return response
 
     def read(self, name):
         """ get api """
         url = self.get_api_url('/apis/%s' % name)
-        response = self.get(url)
+        response = self.get_request(url)
         return response
 
     def update(self, name, data=''):
         """ update api """
         url = self.get_api_url("/apis/%s" % (name))
-        response = self.patch(url, data)
+        response = self.patch_request(url, data)
         return response
 
     def delete(self, name):
         """ update api """
         url = self.get_api_url("/apis/%s" % (name))
-        response = self.delete(url)
+        response = self.delete_request(url)
         return response
 
     def get_list(self):
         """ get api list """
         url = self.get_api_url('/apis/')
-        response = self.get(url)
+        response = self.get_request(url)
         return response
 
     def add_list(self, api_list: dict):
@@ -233,3 +233,41 @@ class PyKongAPI(PyKongCore):
             res = self.create()
             # r = requests.post(url, json=json)
             # print(api_url)
+
+
+class PyKongConsumer(PyKongCore):
+    """ PyKongAPI class"""
+
+    def __init__(self, host, port):
+        """ Constructor """
+        super(PyKongConsumer, self).__init__(host, port)
+
+    def read_list(self):
+        """ get consumer list """
+        url = self.get_api_url('/consumers/')
+        response = self.get_request(url)
+        return response
+
+    def read(self, name):
+        """ get consumer """
+        url = self.get_api_url('/consumers/%s' % name)
+        response = self.get_request(url)
+        return response
+
+    def create(self, data=''):
+        """ create consumer """
+        url = self.get_api_url('/consumers/')
+        response = self.post_request(url, data)
+        return response
+
+    def update(self, name, data=''):
+        """ update consumer """
+        url = self.get_api_url('/consumers/%s' % name)
+        response = self.patch_request(url, data)
+        return response
+
+    def delete(self, name):
+        """ delete consumer """
+        url = self.get_api_url('/consumers/%s' % name)
+        response = self.delete_request(url)
+        return response
